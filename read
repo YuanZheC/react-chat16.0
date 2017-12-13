@@ -1,0 +1,82 @@
+```
+const mongoose = require('mongoose')
+// 只是监听链接成功没
+mongoose.connection.on('connected',function(){
+    console.log('mongo connect success')
+})
+
+// 相当于新建了 user表,对表(文档)的字段(集合)
+mongoose.model('user',new mongoose.Schema({
+    user: {type: String, require: true},
+    age: {type: Number,require: true}
+}))
+
+// 新增数据
+User.create({
+    user: 'imooc',
+    age: 18
+},function(err,doc){
+    if(!err){
+        console.log(doc)
+    }else{
+        console.log(err)
+    }
+})
+
+// 查询所有的
+User.find({},function(err,doc){
+    return res.json(doc) // return Array
+})
+// 查询特定的字段
+User.find({user:'xiaoming'},function(err,doc){
+    res.json(doc) // return Array
+})
+// 查找某一个
+User.findOne({user:'xiaoming'},function(err,doc){
+    res.json(doc)
+})
+
+// 删除
+User.remove({age: 18},function(err,doc){
+    console.log(doc) // 删除后返回的结果
+})
+
+// 更新 修改某个字段
+User.update({'user':'xiaoming'},{'$set':{age:26}},function(err,doc){
+    console.log(doc)
+})
+```
+
+
+```
+对于action的理解
+第一种方式, 把所有的action集中管理,在action对应的业务action中去定义各种 type
+并且导出
+- actions       写各种同步，异步函数，或者写 socket.on("..")这样的请求
+    - index.js
+    - login.js
+    - other.js
+- redux         在redux中,获取action各种type, 对每种actionType做出合并后的state返回
+    - index.js
+    - login.js
+    - other.js
+在每个redux 中, initState可能会不一样,明天去公司看下
+
+若reducer多了之后,可以在主入口 调用 combineReducers(reducers1,reducer2...)
+
+store 可以理解为state的家,全局只有一个store
+- store.getState()
+- store.dispatch(action) // dispatch推送某个action给reducer
+- store.subscribe()
+- store.replaceReducer()
+
+let store = createStore(
+        comReducer,
+        applyMiddleware(thunk)
+    )
+
+applyMiddleware(...midlewares)
+
+
+若把React组件分为容器组件,UI组件两类,容器组件管理逻辑,UI组件管理显示效果,二者通过connect连接
+```
